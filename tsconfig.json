@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "target": "es2016",
+        "module": "esnext",
+        "sourceMap": true,
+        "lib": [
+            "dom",
+            "es2015",
+            "es2016"
+          ],
+    }
+}
