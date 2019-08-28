@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {
-    "typescript": "^3.5.3"
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^3.6.2"
   },
-  "devDependencies": {},
   "scripts": {
     "build": ".\build.ps1",
     "test": "echo \"Error: no test specified\" && exit 1"
