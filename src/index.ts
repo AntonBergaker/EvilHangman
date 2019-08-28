@@ -1,34 +1,20 @@
-async function requestData(url: string) : Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-        const request = new XMLHttpRequest();
-        
-        request.onreadystatechange = x=> {
-            if (request.readyState == 4) {
-                resolve(request.response);
-            }
-        }
-        
-        request.open("GET", url);
-        request.send();
-    })
-}
-
 function randomRange(min: number, max: number):number {
     return min + Math.floor(Math.random() * (1+max-min));
 }
 
 const wordListByLength : string[][] = [[], [], [], [], [], [], [], [], [], [], [], []];
 let availableWordList : string[];
-let wordLetters : Map<number, HTMLDivElement>;
+const wordLetters : Map<number, HTMLSpanElement> = new Map();
 let wordLength : number;
-let alphabetLetters : Map<string, HTMLDivElement>;
+const alphabetLetters : Map<string, HTMLSpanElement> = new Map();
 let failedTimes = 0;
 
 async function setup() {
-    const globalWordList = (await requestData("wordlist.txt")).split("\n");
+    const text = await fetch("./wordlist.txt").then(x => x.text())
+    const globalWordList = text.split("\n");
 
     for (let word of globalWordList) {
-        const words =  wordListByLength[word.length];
+        const words = wordListByLength[word.length];
         words.push(word.toUpperCase());
     }
 
@@ -37,19 +23,25 @@ async function setup() {
 
 function initWord() {
     const alphabet = document.getElementById("alphabetContainer");
-    alphabetLetters = new Map();
+    const word = document.getElementById("wordContainer");
+
+    alphabetLetters.clear();
+
+    if (alphabet == undefined || word == undefined) {
+        throw new Error("Can't find dom");
+    } 
 
     // Create the letters
     for (let i=1; i<=26; i++) {
         const char = String.fromCharCode(i+64);
-        const div = document.createElement("div");
-        div.classList.add("alphabetLetter");
-        div.innerText = char;
-        div.addEventListener("click", function() {
+        const span = document.createElement("span");
+        span.classList.add("alphabetLetter");
+        span.innerText = char;
+        span.addEventListener("click", function() {
             pickLetter(this.innerText);
         });
-        alphabet.appendChild(div);
-        alphabetLetters.set(char, div);
+        alphabet.appendChild(span);
+        alphabetLetters.set(char, span);
     }
 
     // Choose a length
@@ -58,17 +50,14 @@ function initWord() {
     // Copy the words
     availableWordList = wordListByLength[wordLength].slice();
 
-    const word = document.getElementById("wordContainer");
-
-    wordLetters = new Map();
+    wordLetters.clear();
     // Create the blanks
-    console.log(wordLength);
     for (let i=0; i<wordLength; i++ ) {
-        const div = document.createElement("div");
-        div.classList.add("wordLetter")
-        div.innerText = "_";
-        word.appendChild(div);
-        wordLetters.set(i, div);
+        const span = document.createElement("span");
+        span.classList.add("wordLetter")
+        span.innerText = "_";
+        word.appendChild(span);
+        wordLetters.set(i, span);
     }
 }
 
@@ -95,9 +84,22 @@ function canMatch(configuration: string, word: string, letter:string) {
     return possible;
 }
 
+function stripLetters(word: string, letter: string) : string {
+    return word
+      .split('')
+      .map(x => {
+        return x === letter ? letter : '_'
+      })
+      .join('')
+}
+
 function pickLetter(letter: string) {
     const div = alphabetLetters.get(letter);
-    console.log(letter);
+    
+    if (div == undefined) {
+        return;
+    }
+
     div.style["color"] = "#999";
     div.style["cursor"] = "default";
 
@@ -106,11 +108,10 @@ function pickLetter(letter: string) {
     let bestCount = -1;
 
     const testedConfigurations = new Set<string>();
-    const regEx = new RegExp("[^" + letter + "]", "g");
 
     for (const word of availableWordList) {
         // Replace all letters that's not the selected letter with _
-        const processedWord = word.replace(regEx, "_");
+        const processedWord = stripLetters(word, letter);
 
         // Do nothing if we already tested this configuration
         if (testedConfigurations.has(processedWord)) {
@@ -155,14 +156,20 @@ function pickLetter(letter: string) {
 
     for (let i=0;i<wordLength;i++) {
         if (bestConfiguration.charAt(i) != "_") {
-            wordLetters.get(i).innerText = bestConfiguration.charAt(i);
+            const letter = wordLetters.get(i);
+            if (letter) {
+                letter.innerText = bestConfiguration.charAt(i);
+            }
         }
     }
 
     // If you failed
     if (bestConfiguration.includes(letter) == false) {
         failedTimes++;
-        document.getElementById("image")["src"] = "img/" + failedTimes + ".png";
+        const image = document.getElementById("image");
+        if (image instanceof HTMLImageElement) {
+            image.src = `img/${failedTimes}.png`;
+        }
     }
 }
 

@@ -1,0 +1,25 @@
+{
+  "name": "evilhangman",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "typescript": "^3.5.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": ".\build.ps1",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntonBergaker/EvilHangman.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AntonBergaker/EvilHangman/issues"
+  },
+  "homepage": "https://github.com/AntonBergaker/EvilHangman#readme"
+}
