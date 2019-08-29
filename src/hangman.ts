@@ -1,16 +1,31 @@
+export enum HangmanPlaceLetterReply {
+    FoundLetter,
+    NoLetter,
+    AlreadyUsedLetter
+}
 
-export class HangMan {
+export interface HangmanHistoryEntry {
+    letter: string,
+    wasCorrect: boolean,
+    sequenceSoFar : string,
+    entriesLeftCount : number,
+    entriesLeft : string[]
+}
+
+export class Hangman {
     readonly wordListByLength : Map<number, string[]>;
+    readonly usedLetters : Set<string>;
     availableWordList : string[] = [];
     wordLength : number = 0;
     failedTimes : number = 0;
+    sequence : string;
 
-    private randomRange(min: number, max: number):number {
-        return min + Math.floor(Math.random() * (1+max-min));
-    }
+    private history : HangmanHistoryEntry[] = []
 
     public constructor() {
         this.wordListByLength = new Map();
+        this.usedLetters = new Set();
+        this.sequence = "";
     }
 
     public addWords(words: string[]) {
@@ -26,14 +41,11 @@ export class HangMan {
         }
     }
 
-    private clear() {
-        this.failedTimes = 0;
-    }
-
-    public start() {
+    public start(wordLength : number) {
         // Choose a length
-        this.wordLength = this.randomRange(5, 9);
+        this.wordLength = wordLength;
 
+        this.sequence = "_".repeat(wordLength);
         const array = this.wordListByLength.get(this.wordLength);
 
         if (array == undefined) {
@@ -41,8 +53,10 @@ export class HangMan {
         }
 
         // Copy the words
+        this.usedLetters.clear();
         this.availableWordList = array.slice();
         this.failedTimes = 0;
+        this.history = [];
     }
 
     canMatch(configuration: string, word: string, letter:string) {
@@ -78,9 +92,25 @@ export class HangMan {
           .join('')
     }
 
+    randomElementInArray<T>(array: T[]) : T {
+        return array[Math.floor(Math.random() * array.length)];
+    }
 
-    pickLetter(letter: string) : string | null {
-            
+    getPossibleWord() : string {
+        return this.randomElementInArray(this.availableWordList);
+    }
+
+    hasWon() : boolean {
+        return this.sequence.includes('_') == false;
+    }
+
+    pickLetter(letter: string) : HangmanPlaceLetterReply {
+        if (this.usedLetters.has(letter)) {
+            return HangmanPlaceLetterReply.AlreadyUsedLetter;
+        }
+
+        this.usedLetters.add(letter);
+
         // Choose a good configuration
         let bestConfiguration = "";
         let bestCount = -1;
@@ -137,10 +167,31 @@ export class HangMan {
         console.log("Best configuration was: " + bestConfiguration + " with " + bestCount + " points")
         console.log(this.availableWordList);
 
+        // Select 50 words and push them into history bois
+        this.history.push( {
+            letter: letter,
+            wasCorrect: !bestIsFail,
+            sequenceSoFar: this.sequence,
+            entriesLeftCount: this.availableWordList.length,
+            entriesLeft: this.availableWordList.slice(0, Math.min(50, this.availableWordList.length))
+        });
+
+        const letterArray = this.sequence.split('');
+        for (let i=0; i < this.wordLength; i++) {
+            if (bestConfiguration.charAt(i) == letter) {
+                letterArray[i] = letter;
+            }
+        }
+        this.sequence = letterArray.join('');
+
         if (bestIsFail) {
             this.failedTimes++;
+            return HangmanPlaceLetterReply.NoLetter;
         }
+        return HangmanPlaceLetterReply.FoundLetter;
+    }
 
-        return bestIsFail ? null : bestConfiguration;
+    getHistory() : HangmanHistoryEntry[] {
+        return this.history;
     }
 }

@@ -6,7 +6,119 @@
     <meta name="description" content="Very difficult hangman that cheats">
     <meta name="author" content="Anton Bergåker">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Chilanka&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Chilanka', cursive;
+        }
+
+        #difficultyOverlay {
+            visibility: visible;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.3);
+        }
+
+        #aiPopup {
+            visibility: "hidden";
+            display: none;
+            opacity: 1;
+            z-index: 6;
+            position: relative;
+            width: 900px;
+            max-width: 80%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.5);
+
+            font-size: 1.5em;
+            padding: 20px;
+        }
+
+        #aiClose {
+            position: absolute;
+            right: 30px;
+            top: 30px;
+            font-size: 1.5em;
+            padding: 0;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        #aiEntries {
+            font-family: 'Courier New', Courier, monospace;
+            height: 70vh;
+            overflow-y: scroll;
+            overflow-x: auto;
+        }
+
+        .aiEntry {
+            margin-bottom: 70px;
+        }
+
+        .aiEntry > .wordsLeft {
+            font-size: 0.7em;
+        }
+
+        .aiEntry > p > span {
+            color: red;
+        }
+
+        #difficultyPopup {
+            opacity: 1;
+            z-index: 5;
+            position: relative;
+            width: 400px;
+            max-width: 80%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.5);
+
+            font-size: 1.5em;
+            padding: 20px;
+        }
+
+
+        .difficultySelection {
+            padding-top: 15px;
+            cursor: pointer;
+        }
+
+        .difficultySelection:hover {
+            background-color: #dde;
+        }
+
+        .difficultySelection > img {
+            display: inline-block;
+            height: 80px;
+            margin: 0;
+            padding: 0;
+            vertical-align: center;
+        }
+        
+        .difficultySelection > div {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .difficultySelection > div > h3 {
+            margin: 0;
+            padding: 0;
+        }
+
+        .difficultySelection > div > p {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         #contentOuter {
             margin: 0 auto;
             display: flex;
@@ -22,7 +134,8 @@
             overflow: auto;
             text-align: center;
         }
-        img {
+
+        #imageContainer > img {
             margin: 0 auto;
             max-width: 95%;
             max-height: 600px;
@@ -59,9 +172,53 @@
             max-width: 1.5em;
         }
 
+        #optionsContainer {
+            visibility: hidden;
+            font-size: 1.5em;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #optionsContainer > div {
+            margin: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
+    <div id="difficultyOverlay">
+        <div id="aiPopup">
+            <p id="aiClose">X</p>
+            <h2>AI History</h2>
+            <div id="aiEntries">
+                
+            </div>
+        </div>
+        
+        <div id="difficultyPopup">
+            <h2>Choose a difficulty</h2>
+            <div class="difficultySelection" id="difficultySelection13">
+                <img src="./img/duck.png"/>
+                <div>
+                    <h3>13 Guesses</h3>
+                    <p>Forgiving hangman setup</p>
+                </div>
+            </div>
+            <div class="difficultySelection" id="difficultySelection8">
+                <img src="./img/hung.png"/>
+                <div>
+                    <h3>8 Guesses</h3>
+                    <p>Standard hangman setup</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="contentOuter">
         <div id="content">
             <div id=imageContainer>
@@ -74,8 +231,17 @@
             <div id="alphabetContainer">
                 
             </div>
+
+            <div id="optionsContainer">
+                <div id="playAgain">
+                    Play Again?
+                </div>
+                <div id="revealAI">
+                    Reveal AI
+                </div>
+            </div>
         </div>
     </div>
-    <script src="index.js"></script>
+    <script src="bundle.js"></script>
 </body>
 </html>

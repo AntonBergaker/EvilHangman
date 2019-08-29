@@ -2,6 +2,7 @@
     "compilerOptions": {
         "target": "es5",
         "module": "esnext",
+        "jsx": "react",
         "allowSyntheticDefaultImports": true,
         "allowUnreachableCode": false,
         "allowUnusedLabels": false,
@@ -13,6 +14,7 @@
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "outDir": "dist",
+        "downlevelIteration": true,
         "sourceMap": true,
         "strict": true,
         "lib": [
