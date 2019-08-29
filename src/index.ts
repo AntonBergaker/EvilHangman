@@ -1,7 +1,5 @@
-import wordsUrl from "./wordlist.txt";
-import imageUrls from "./img/*.png";
-
 import {HangMan} from "./hangman";
+
 
 const wordLetters : Map<number, HTMLSpanElement> = new Map();
 const alphabetLetters : Map<string, HTMLSpanElement> = new Map();
@@ -14,7 +12,7 @@ function removeAllDomChildren(element : HTMLElement) {
 }
 
 async function setup() {
-    const text = await fetch(wordsUrl).then(x => x.text());
+    const text = await fetch("./wordlist.txt").then(x => x.text());
     hangman.addWords(text.split("\n"));
 
     hangman.start();
@@ -81,7 +79,7 @@ function pickLetter(letter: string) {
     } else {
         const image = document.getElementById("image");
         if (image instanceof HTMLImageElement) {
-            image.src = imageUrls[hangman.failedTimes];
+            image.src = `./img/guess8/${hangman.failedTimes}.png`;
         }
     }
 }
