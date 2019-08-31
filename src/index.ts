@@ -53,6 +53,18 @@ function removeAllDomChildren(element : HTMLElement) {
     }
 }
 
+function addClickFunction(element : HTMLElement | null | string, func : (this : HTMLElement, ev : MouseEvent) => any ) {
+    let dom : HTMLElement | null;
+    if (typeof element == "string") {
+        dom = document.getElementById(element);
+    } else {
+        dom = element as HTMLElement;
+    }
+    if (dom instanceof HTMLElement) {
+        dom.addEventListener("click", func);
+    }
+}
+
 function getGuessCount() {
     return difficulty == GuessMode.Guess13 ? 13 : 8;
 }
@@ -165,34 +177,17 @@ async function setup() {
     const elements = document.getElementsByClassName("difficultySelection");
 
     for (let i=0;i < elements.length; i++) {
-        const element = elements.item(i);
-        if (element instanceof HTMLDivElement) {
-            element.addEventListener("click", function() {
-                selectDifficulty(this.id);
-            })
-        }
+        const element = elements.item(i) as HTMLElement;
+        addClickFunction(element, function() {
+            selectDifficulty(this.id);
+        })
     }
 
-    const playAgainDom = document.getElementById("playAgain");
-    if (playAgainDom instanceof HTMLDivElement) {
-        playAgainDom.addEventListener("click", function() {
-            playAgain();
-        });
-    }
+    addClickFunction("playAgain", playAgain);
 
-    const revealAIDom = document.getElementById("revealAI");
-    if (revealAIDom instanceof HTMLDivElement) {
-        revealAIDom.addEventListener("click", function() {
-            showAiHistory();
-        });
-    }
+    addClickFunction("revealAI", showAiHistory);
 
-    const closeAIDom = document.getElementById("aiClose");
-    if (closeAIDom instanceof HTMLParagraphElement) {
-        closeAIDom.addEventListener("click", function() {
-            hideAiHistory();
-        });
-    }
+    addClickFunction("aiClose", hideAiHistory);
 
     setupBoard(wordLength);
 }
