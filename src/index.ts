@@ -169,7 +169,7 @@ function selectDifficulty(difficultyString : string) {
 
 async function setup() {
     const text = await fetch("./wordlist.txt").then(x => x.text());
-    hangman.addWords(text.split("\n"));
+    hangman.addWords(text.split("\n").map(x => x.trim()));
     if (wordLength == 0) {
         wordLength = randomRange(4, 8)
     }

@@ -1,26 +1,12 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "module": "esnext",
-        "jsx": "react",
-        "allowSyntheticDefaultImports": true,
-        "allowUnreachableCode": false,
-        "allowUnusedLabels": false,
-        "alwaysStrict": true,
-        "esModuleInterop": true,
-        "moduleResolution": "node",
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "outDir": "dist",
-        "downlevelIteration": true,
-        "sourceMap": true,
-        "strict": true,
-        "lib": [
-            "dom",
-            "es2015",
-            "es2016"
-          ]
+      "target": "ES6",
+      "lib": ["ES2015", "DOM"],
+      "module": "commonjs",
+      "noImplicitAny": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "outDir": "./dist"
     }
 }

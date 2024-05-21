@@ -1,31 +1,15 @@
 {
   "name": "evilhangman",
   "version": "1.0.0",
-  "description": "",
-  "private": true,
-  "dependencies": {
-    "ts-loader": "^6.0.4"
-  },
-  "devDependencies": {
-    "copy-webpack-plugin": "^5.0.4",
-    "typescript": "^3.6.2",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.7",
-    "webpack-dev-server": "^3.8.0"
-  },
+  "main": "index.js",
   "scripts": {
-    "build": ".\build.ps1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AntonBergaker/EvilHangman.git"
-  },
-  "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/AntonBergaker/EvilHangman/issues"
-  },
-  "homepage": "https://github.com/AntonBergaker/EvilHangman#readme"
+  "description": "",
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "typescript-bundle": "^1.0.18"
+  }
 }
